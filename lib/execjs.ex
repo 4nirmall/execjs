@@ -26,7 +26,7 @@ defmodule Execjs do
           Poison.Parser.t(), Poison.Parser.t() | :undefined | no_return
   def call(context, identifier, args \\ [], opts\\ %{})
       when is_binary(identifier) and is_list(args) do
-    logger = get_logger();
+    logger = get_logger(opts)
     source =
       "#{logger};
       result = #{identifier}.apply(this, #{
@@ -104,7 +104,8 @@ defmodule Execjs do
     end
   end
 
-  defp get_logger() do
+  defp get_logger(%{logger: logger}), do: logger
+  defp get_logger(_something) do
     "
     var logs = {
       entries: []
